@@ -1,6 +1,5 @@
 package com.jinfeng.spark.ml
 
-import breeze.linalg.max
 import org.apache.spark.ml.classification.{BinaryLogisticRegressionSummary, LogisticRegression}
 import org.apache.spark.sql.SQLContext
 import org.apache.spark.{SparkConf, SparkContext}
