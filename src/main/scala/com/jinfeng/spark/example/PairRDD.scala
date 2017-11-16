@@ -29,8 +29,8 @@ class ThreadDemo(threadDemo: String) extends Runnable {
   def run() {
     val conf = new SparkConf().setAppName(threadDemo).setMaster("local")
     conf.set("spark.driver.allowMultipleContexts", "true")
-    println("AppName === " + threadDemo)
     val sc = new SparkContext(conf)
+    println("AppName === " + threadDemo + ",ApplicationId === " + sc.applicationId)
     val rdd = sc.parallelize(List((1, 2), (3, 4), (3, 6)))
     rdd.foreach(println)
     sc.stop()
