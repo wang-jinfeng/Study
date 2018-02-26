@@ -1,6 +1,7 @@
 package com.jinfeng.spark.sql
 
 import org.apache.spark.sql.SQLContext
+import org.apache.spark.sql.Row
 import org.apache.spark.storage.StorageLevel
 import org.apache.spark.{SparkConf, SparkContext}
 
@@ -10,7 +11,7 @@ import org.apache.spark.{SparkConf, SparkContext}
 
 case class Record(key: Int, value: String)
 
-case class Records(key: Int, value: String, score: Int)
+case class Records(key: Int, value: String, text: String)
 
 object RDDRelation {
   def main(args: Array[String]): Unit = {
@@ -44,23 +45,40 @@ object RDDRelation {
     // The results of SQL queries are themselves RDDs and support all normal RDD functions.  The
     // items in the RDD are of type Row, which allows you to access each column by ordinal.
 
-    val rddFromSql = sqlContext.sql("SELECT key, value, value FROM records WHERE key < 10")
+    val rddFromSql = sqlContext.sql("SELECT key, value, value FROM records WHERE key < 10").rdd.mapPartitions(myfuncPerPartition)
+    val rddFromSql1 = sqlContext.sql("SELECT key, value, value FROM records WHERE key < 10").rdd.mapPartitions(myfuncPerPartition)
 
+    println("reduceByKey:")
+    val rddMap = rddFromSql.union(rddFromSql1).repartition(1).map(records => {
+      (records.key, records.value)
+    }).reduceByKey(_ + ";" + _).map(row => {
+      (row._1, row._2.split(";").iterator)
+    })
+
+    println("groupByKey:")
+    rddFromSql.union(rddFromSql1).repartition(1).map(records => {
+      (records.key, records.value)
+    }).groupByKey().foreach(println)
+    /*
     val rddFromSql0 = sqlContext.sql("SELECT key, value, key+10 score FROM records WHERE key < 10").rdd.map(row =>
       Records
-    (row.getAs("key"), row.getAs("value"), row.getAs("score"))).persist(StorageLevel.MEMORY_ONLY_SER)
-
+      (row.getAs("key"), row.getAs("value"), row.getAs("score"))).persist(StorageLevel.MEMORY_ONLY_SER)
+    */
+    /*
     println("Result of RDD.map:")
     rddFromSql.map(row =>
       // s"Key: ${row(0)}, Value: ${row(1)}"
       row.getAs("value").toString
     ).collect().foreach(println)
+    */
 
+    /*
     println("Results of RDD.map:")
     rddFromSql0.toDF().map(row =>
       // s"Key: ${row(0)}, Value: ${row(1)}"
       s"Key:${row(0)},score:${row.getAs("score")}"
     ).collect().foreach(println)
+    */
 
     // Queries can also be written using a LINQ-like Scala DSL.
     // df.where($"key" === 1).orderBy($"value".asc).select($"key").collect().foreach(println)
@@ -80,5 +98,11 @@ object RDDRelation {
     sqlContext.sql("SELECT * FROM parquetFile").collect().foreach(println)
     */
     sc.stop()
+  }
+
+  def myfuncPerPartition(iter: Iterator[Row]): Iterator[Records] = {
+    println("run in partition")
+    var res = for (e <- iter) yield Records(e.getAs("key"), e.getAs("value"), "mapPartitons")
+    res
   }
 }
