@@ -10,7 +10,8 @@ object RDDExample {
     val conf = new SparkConf().setAppName("RDD Example").setMaster("local")
     val sc = new SparkContext(conf)
     val rdd1 = sc.parallelize(1 to 9, 3)
-    val rdd2 = rdd1.map(x => x * 2)
-    rdd2.collect().foreach(println)
+    rdd1.foreach(println)
+    //    val rdd2 = rdd1.map(x => x * 2)
+    //    rdd2.collect().foreach(println)
   }
 }

@@ -1,7 +1,6 @@
 package com.jinfeng.spark.sql
 
-import org.apache.spark.sql.SQLContext
-import org.apache.spark.sql.Row
+import org.apache.spark.sql.{DataFrame, Row, SQLContext}
 import org.apache.spark.storage.StorageLevel
 import org.apache.spark.{SparkConf, SparkContext}
 
@@ -16,11 +15,6 @@ case class Records(key: Int, value: String, text: String)
 object RDDRelation {
   def main(args: Array[String]): Unit = {
     val conf = new SparkConf().setAppName("RDDRelation").setMaster("local[5]")
-    conf.set("spark.rdd.compress=true", "true")
-    conf.set(s"spark.serializer", s"org.apache.spark.serializer.KryoSerializer")
-    conf.set(s"spark.kryo.registrationRequired", s"true")
-    conf.registerKryoClasses(Array(classOf[scala.collection.mutable.WrappedArray.ofRef[_]],
-      classOf[Record], classOf[Array[Record]], classOf[Records], classOf[Array[Records]], classOf[Array[String]]))
     val sc = new SparkContext(conf)
     val sqlContext = new SQLContext(sc)
     //val output = "D:\\Program Files\\JetBrains\\IntelliJ IDEA\\Workspaces\\Spark\\src\\main\\resources\\output\\sql\\"
@@ -30,9 +24,12 @@ object RDDRelation {
     import sqlContext.implicits._
 
     val df = sc.parallelize((1 to 100).map(i => Record(i, s"val_$i"))).persist(StorageLevel.MEMORY_ONLY_SER).toDF()
+
+    val baseDF: DataFrame = null
+    baseDF.intersect(df).foreach(println)
     // Any RDD containing case classes can be registered as a table.  The schema of the table is
     // automatically inferred using scala reflection.
-    df.registerTempTable("records")
+    // df.registerTempTable("records")
 
     // Once tables have been registered, you can run SQL queries over them.
     // println("Result of SELECT *:")
@@ -45,9 +42,10 @@ object RDDRelation {
     // The results of SQL queries are themselves RDDs and support all normal RDD functions.  The
     // items in the RDD are of type Row, which allows you to access each column by ordinal.
 
-    val rddFromSql = sqlContext.sql("SELECT key, value, value FROM records WHERE key < 10").rdd.mapPartitions(myfuncPerPartition)
-    val rddFromSql1 = sqlContext.sql("SELECT key, value, value FROM records WHERE key < 10").rdd.mapPartitions(myfuncPerPartition)
+    //  val rddFromSql = sqlContext.sql("SELECT key, value, value FROM records WHERE key < 10").rdd.mapPartitions(myfuncPerPartition)
+    //  val rddFromSql1 = sqlContext.sql("SELECT key, value, value FROM records WHERE key < 10").rdd.mapPartitions(myfuncPerPartition)
 
+    /*
     println("reduceByKey:")
     val rddMap = rddFromSql.union(rddFromSql1).repartition(1).map(records => {
       (records.key, records.value)
@@ -59,6 +57,7 @@ object RDDRelation {
     rddFromSql.union(rddFromSql1).repartition(1).map(records => {
       (records.key, records.value)
     }).groupByKey().foreach(println)
+    */
     /*
     val rddFromSql0 = sqlContext.sql("SELECT key, value, key+10 score FROM records WHERE key < 10").rdd.map(row =>
       Records
