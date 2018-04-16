@@ -3,6 +3,8 @@ package com.jinfeng.spark.example
 import com.alibaba.fastjson.{JSON, JSONObject}
 import org.apache.commons.lang.StringUtils
 
+import scala.collection.mutable
+
 /**
   * Project: Study
   * Package: com.jinfeng.spark.example
@@ -64,8 +66,10 @@ object Json2Class {
     println("crowd_name" + crowdTag.crowd_name)
     val tag = crowdTag.tag
     parseJson(tag)
+    println("stack=======>" + stack)
   }
 
+  val stack = new mutable.Stack[Object]
 
   def parseJson(tag: Tag) {
     var logic = tag.logic
@@ -96,9 +100,13 @@ object Json2Class {
       }
       if (StringUtils.isNotBlank(sql)) {
         println("sql=======>" + sql)
+        stack.push(sql)
       }
     }
-    println("logic=======>" + logic)
+    val top1 = stack.pop()
+    val top2 = stack.pop()
+    val combination = "" + top1 + logic + top2
+    stack.push(combination)
   }
 
   def sql_con(_sql: String): String = {

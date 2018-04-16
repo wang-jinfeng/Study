@@ -76,12 +76,6 @@
             <artifactId>presto-jdbc</artifactId>
             <version>0.161</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/net.minidev/json-smart -->
-        <dependency>
-            <groupId>net.minidev</groupId>
-            <artifactId>json-smart</artifactId>
-            <version>2.3</version>
-        </dependency>
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
@@ -93,6 +87,7 @@
             <artifactId>ganymed-ssh2</artifactId>
             <version>262</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/net.liftweb/lift-json -->
 
     </dependencies>
 
