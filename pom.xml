@@ -10,7 +10,7 @@
 
     <properties>
         <scala.version>2.11.8</scala.version>
-        <spark.version>1.6.0-cdh5.8.2</spark.version>
+        <spark.version>2.1.1</spark.version>
         <!-- 编译时的编码 -->
     </properties>
     <repositories>
@@ -37,22 +37,22 @@
         </dependency>
         <dependency>
             <groupId>org.apache.spark</groupId>
-            <artifactId>spark-core_2.10</artifactId>
+            <artifactId>spark-core_2.11</artifactId>
             <version>${spark.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.spark</groupId>
-            <artifactId>spark-hive_2.10</artifactId>
+            <artifactId>spark-hive_2.11</artifactId>
             <version>${spark.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.spark</groupId>
-            <artifactId>spark-mllib_2.10</artifactId>
+            <artifactId>spark-mllib_2.11</artifactId>
             <version>${spark.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.spark</groupId>
-            <artifactId>spark-streaming-kafka_2.10</artifactId>
+            <artifactId>spark-streaming-kafka_2.11</artifactId>
             <version>${spark.version}</version>
         </dependency>
         <dependency>
@@ -87,7 +87,6 @@
             <artifactId>ganymed-ssh2</artifactId>
             <version>262</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/net.liftweb/lift-json -->
 
     </dependencies>
 
