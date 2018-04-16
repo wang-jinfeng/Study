@@ -38,8 +38,6 @@ object UserCrowd {
         |]}}
       """.stripMargin
 
-    //  val jsonString: String = args(0)
-
     val crowdTag = JSON.parseObject(jsonString, classOf[CrowdTag])
 
     val conf = new SparkConf().setAppName("UserCrowd_Id==>>" + crowdTag.crowd_id).setMaster("local[10]")
@@ -55,53 +53,6 @@ object UserCrowd {
       .getOrCreate()
 
     val sc = spark.sparkContext
-
-    /*
-    val os_set = Set("imei", "idfa")
-    val id_type = if (jsonObject.keySet().contains("id_type") && os_set.contains(jsonObject.getString("id_type"))) {
-      jsonObject.getString("id_type")
-    } else {
-      ""
-    }
-
-    val format = new SimpleDateFormat("yyyy-MM-dd")
-    var start = ""
-    var end = ""
-    if (jsonObject.keySet().contains("start") && jsonObject.containsKey("end")) {
-      try {
-        start = if (StringUtils.isNotBlank(jsonObject.getString("start"))) {
-          jsonObject.getString("start")
-        } else {
-          ""
-        }
-        end = if (StringUtils.isNotBlank(jsonObject.getString("end"))) {
-          jsonObject.getString("end")
-        } else {
-          ""
-        }
-      } catch {
-        case e: Exception =>
-          e.printStackTrace()
-      }
-    }
-
-    if (!start.matches("(\\d{4}-\\d{2}-\\d{2})") && !end.matches("(\\d{4}-\\d{2}-\\d{2})")) {
-      val cal: Calendar = Calendar.getInstance()
-      cal.setTime(new Date())
-      cal.add(Calendar.DAY_OF_MONTH, -1)
-      end = format.format(cal.getTime)
-      cal.add(Calendar.MONTH, -3)
-      start = format.format(cal.getTime)
-    }
-
-    val id_type_sql = if (StringUtils.isNotBlank(id_type)) {
-      " AND ctype = '" + id_type + "'"
-    } else {
-      ""
-    }
-
-    val dataFrame = spark.sql("SELECT md5(devid) deviceid,app_cat,tid FROM dmp.tag_dev_game WHERE devid IS NOT NULL AND devid <> ''" + id_type_sql).persist(StorageLevel.MEMORY_ONLY)
-    */
 
     import spark.implicits._
 
