@@ -54,6 +54,7 @@ object Json2Class {
         |]}}
       """.stripMargin
       */
+
     val jsonString =
       """
         |{"crowd_id":"id_1","crowd_name":"标签","tag":{"logic":true,"condition":[{"app_cat":"020109","tid":"020110"},
@@ -72,7 +73,7 @@ object Json2Class {
   val stack = new mutable.Stack[Object]
 
   def parseJson(tag: Tag) {
-    var logic = tag.logic
+    val logic = tag.logic
     val tags = tag.condition
     for (i <- 0 to tags.length - 1) {
       var sql = ""
