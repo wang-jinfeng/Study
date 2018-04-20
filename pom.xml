@@ -47,13 +47,13 @@
         </dependency>
         <dependency>
             <groupId>org.apache.spark</groupId>
-            <artifactId>spark-mllib_2.11</artifactId>
-            <version>${spark.version}</version>
+            <artifactId>spark-mllib_2.10</artifactId>
+            <version>1.6.0-cdh5.8.2</version>
         </dependency>
         <dependency>
             <groupId>org.apache.spark</groupId>
             <artifactId>spark-streaming-kafka_2.11</artifactId>
-            <version>${spark.version}</version>
+            <version>1.6.3</version>
         </dependency>
         <dependency>
             <groupId>org.apache.kafka</groupId>

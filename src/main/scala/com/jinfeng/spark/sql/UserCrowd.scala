@@ -32,10 +32,17 @@ object UserCrowd {
 
   def main(args: Array[String]): Unit = {
 
+    /*
     val jsonString =
       """
         |{"crowd_id":"id_1","crowd_name":"标签","tag":{"logic":true,"condition":[{"app_cat":"020101","tid":"020201"},{"app_cat":"020102"}
         |]}}
+      """.stripMargin
+      */
+
+    val jsonString =
+      """
+        |{"crowd_id":"id_1","crowd_name":"标签","tag":{"app_cat":"020101","tid":"020201"}}
       """.stripMargin
 
     val crowdTag = JSON.parseObject(jsonString, classOf[CrowdTag])
@@ -62,14 +69,6 @@ object UserCrowd {
 
     dataFrame.createOrReplaceTempView("user_crowd")
 
-    //  配置AWS S3的访问权限
-    //  sc.hadoopConfiguration.set("fs.s3.access.key", "AKIAPWASEVX7SYEFWGTQ")
-    //  sc.hadoopConfiguration.set("fs.s3.secret.key", "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")
-
-    //  val output = "s3://reyunbpu/dmp/usercrowd/id=" + crowdTag.crowd_id
-    //  判断AWS S3路径是否存在，不同于HDFS
-    //  FileSystem.get(new URI("s3://reyunbpu"), sc.hadoopConfiguration).delete(new Path(output), true)
-
     val output = "src/main/resources/output/id=" + crowdTag.crowd_id
     FileSystem.get(sc.hadoopConfiguration).delete(new Path(output), true)
 
@@ -92,6 +91,7 @@ object UserCrowd {
     * @param tag   Tag(logic: Boolean, condition: Array[Object])
     */
   def parseJson(spark: SparkSession, sc: SparkContext, tag: Tag) {
+
     val logic = tag.logic
     val tags = tag.condition
     for (i <- tags.indices) {
