@@ -7,14 +7,14 @@ import org.apache.spark.{SparkConf, SparkContext}
 /**
   * Created by WangJinfeng on 2017/4/19.
   */
-object PairRDD {
+object ThreadSpark {
 
   def main(args: Array[String]): Unit = {
     val threadPool: ExecutorService = Executors.newFixedThreadPool(1)
     try {
       //提交5个线程
       for (i <- 1 to 5) {
-        threadPool.submit(new ThreadDemo("thread" + i))
+        threadPool.submit(new ThreadSpark("thread" + i))
         //threadPool.execute(new ThreadDemo("thread" + i))
       }
     } finally {
@@ -23,7 +23,7 @@ object PairRDD {
   }
 }
 
-class ThreadDemo(threadDemo: String) extends Runnable {
+class ThreadSpark(threadDemo: String) extends Runnable {
 
   @Override
   def run() {
